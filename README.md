@@ -9,7 +9,7 @@ federal state.
 
 The repository contains all the R code and data to reproduce the
 analyses and figures in XXXX. In addition, it contains the [source
-code](https://github.com/istaude/conservation-gardening-shiny-app/blob/master/app.R)
+code](https://github.com/istaude/conservation-gardening-shiny-app/tree/master/CG-App)
 for the application.
 
 ## Folder structure
