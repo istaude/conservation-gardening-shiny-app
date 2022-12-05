@@ -32,3 +32,9 @@ for the application.
     figures in our study.
 
 6.  **app** is the front and backend for the Shiny application.
+
+## Contact
+
+Please contact us at <ingmar.staude@uni-leipzig.de> if you have further
+questions, or information on which plants we have not listed yet amongst
+conservation gardening species.
