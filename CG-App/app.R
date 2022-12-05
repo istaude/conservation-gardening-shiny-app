@@ -1,6 +1,7 @@
 library(shiny)
 library(rsconnect)
 library(DT)
+library(data.table)
 library(tidyverse)
 library(sf)
 library(leaflet)
@@ -12,26 +13,9 @@ library(shinyjs)
 library(scales)
 
 
-d <- read_csv("./Data-shiny/shiny_data.csv")
-
-germany <- ne_states(country = "Germany", returnclass = "sf")
-threat_summary <- read_excel("./Data-shiny/red_lists_summary.xlsx")
-germany <- full_join(germany, threat_summary, by = c("name" = "Bundesland"))
-germany$label <- paste(germany$name, 
-                       "<br><i>Bewertete Taxa:</i>", germany$`Bewertete etablierte Taxa`,
-                       "<br><i>Anzahl gefährdet (0-3, G, R):</i>", germany$Gefährdet,
-                       "<br><i>Prozent gefährdet:</i>", label_percent()(round(germany$Prozentual,2)),
-                       "<br><i>0 - Ausgestorben oder verschollen: </i>", germany$`0`,
-                       "<br><i>1 - Vom Aussterben bedroht: </i>", germany$`1`,
-                       "<br><i>2 - Stark gefährdet: </i>", germany$`2`,
-                       "<br><i>3 - Gefährdet: </i>", germany$`3`,
-                       "<br><i>G - Gefährdung unbekannten Ausmaßes: </i>", germany$G,
-                       "<br><i>R - Extrem selten: </i>", germany$R,
-                       "<br><i>V - Vorwarnliste: </i>", germany$V,
-                       "<br><i>Publikationsjahr von Rote Liste: </i>", germany$Publikationsjahr)
 
 
-
+# front end ---------------------------------------------------------------
 ui <- dashboardPage(
   
   header = dashboardHeader(status = "olive"),
@@ -40,7 +24,7 @@ ui <- dashboardPage(
     left = a(
       href = "https://github.com/istaude/conservation-gardening-shiny-app",
       target = "_blank",
-      "App Github Repository"
+      "Github Repository"
     )
   ),
   
@@ -87,17 +71,11 @@ ui <- dashboardPage(
   ),
   
   
-  
-  
-  
   body = dashboardBody(
     useShinyjs(),
     
     
-    
-    
-    
-    
+    # title page --------------------------------------------------------------
     tabItems(
       
       tabItem(  
@@ -122,9 +100,15 @@ ui <- dashboardPage(
         
       ),
       
+      
+      
+      
+      
+      
+      # cg species --------------------------------------------------------------
       tabItem(  
         tabName = "pflanzenlisten",
-
+        
         fluidRow(
           box(
             title = "Info box",
@@ -163,10 +147,10 @@ ui <- dashboardPage(
               ),
               downloadButton("downloadData", "Download Pflanzenliste für Bundesland")
           )
-          ),
-
+        ),
+        
         fluidRow(
-
+          
           box(width = 2,
               status = "warning",
               title = "Auswahl",
@@ -190,7 +174,7 @@ ui <- dashboardPage(
               selectInput(inputId = "ph", label = "PH-Wert", selectize = F,
                           c("Alle", "sauer", "basisch")
               ),
-            
+              
               selectInput(inputId = "boden",  label = "Boden", selectize = F,
                           c("Alle",  "durchlässig", "humus", "lehmig", "normal")
               ),
@@ -234,15 +218,15 @@ ui <- dashboardPage(
               
           ),
           
-        box(
-          title = "Conservation Gardening Pflanzen",
-          width = 10,
-          solidHeader = T,
-          status = "warning",
-          closable = F,
-          collapsible = F,
-          DT::dataTableOutput("table")
-        )
+          box(
+            title = "Conservation Gardening Pflanzen",
+            width = 10,
+            solidHeader = T,
+            status = "warning",
+            closable = F,
+            collapsible = F,
+            DT::dataTableOutput("table")
+          )
         )
         
       ),
@@ -251,6 +235,8 @@ ui <- dashboardPage(
       
       
       
+      
+      # red list overview -------------------------------------------------------
       tabItem(  
         tabName = "rotelisten",
         
@@ -273,23 +259,26 @@ ui <- dashboardPage(
         ),
         
         fluidRow(
-        box(
-          title = "Bildliche Zusammenfassung der Roten Listen der deutschen Bundesländer",
-          "Klicken Sie auf Bundesländer für weitere Informationen zum Gefährdungsstand.",
-          closable = TRUE,
-          width = 12,
-          status = "warning",
-          solidHeader = T,
-          collapsible = TRUE,
-          leafletOutput("map", height="80vh"),
-          maximizable = T
-        )
+          box(
+            title = "Bildliche Zusammenfassung der Roten Listen der deutschen Bundesländer",
+            "Klicken Sie auf Bundesländer für weitere Informationen zum Gefährdungsstand.",
+            closable = TRUE,
+            width = 12,
+            status = "warning",
+            solidHeader = T,
+            collapsible = TRUE,
+            leafletOutput("map", height="80vh"),
+            maximizable = T
+          )
         )
       ),
       
       
       
       
+      
+      
+      # producers ---------------------------------------------------------------
       tabItem(
         tabName = "produzenten",
         
@@ -301,23 +290,16 @@ ui <- dashboardPage(
             solidHeader = FALSE,
             collapsible = FALSE,
             a("Viele Conservation Gardening Pflanzen sind bereits verfügbar von 
-            Gärtnereien, die auf Wildblumen spezialisert sind, z. B. "),
-            a("Gärtnerei Strickler", href="https://www.gaertnerei-strickler.de/"), 
-            a(", "),
-            a("Hof Berg-Garten", href="https://www.hof-berggarten.de/"),
-            a(", "),
-            a("Staudengärtnerei Spatz und Frank", href="https://www.stauden-spatzundfrank.de/"),
-            a(", "),
-            a("Blauetikett Bornträger", href="https://www.blauetikett.de/"),
-            a(", und "),
-            a("Staudengärtnerei Geißmeier.", href="https://www.gaissmayer.de/web/gaertnerei/"),
-            a("Geben Sie den Namen Ihrer Pflanze in
-            die Suchmaske ein und schauen Sie, ob sie von den oben genannten Betrieben produziert wird.
-              Klicken Sie auf den Link in der URL-Spalte, um direkt zum Produzenten, weitergeleitet
-              zu werden. Wenn diese Weiterleitung nicht funktioniert, kopieren Sie den Link in einen
-              Internetbrowser, oder suchen Sie direkt auf der Seite des Produzenten nach der Pflanze."),
-           
-            
+            Gärtnereien, die auf Wildblumen spezialisert sind, z. B. 
+            Gärtnerei Strickler, Hof Berg-Garten, Staudengärtnerei Spatz und Frank,
+            Blauetikett Bornträger und Staudengärtnerei Geißmeier. 
+            Geben Sie den Namen Ihrer Pflanze in die Suchmaske ein und schauen Sie, 
+            ob sie von den oben genannten Betrieben produziert wird.
+            Klicken Sie auf den Link in der URL-Spalte, um direkt zum Produzenten, weitergeleitet
+            zu werden. Wenn diese Weiterleitung nicht funktioniert, kopieren Sie den Link in einen
+            Internetbrowser, oder suchen Sie direkt auf der Seite des Produzenten nach der Pflanze."),
+          
+          
             br(),
             br(),
             
@@ -325,8 +307,8 @@ ui <- dashboardPage(
                 zertifiziertes Regio-Saatgut zu verwenden. Eine Liste der von der VWW 
                 (Verband deutscher Wildsamen- und Wildpflanzenproduzenten e.V.) zertifizierten
                 Produzenten finden Sie"),
-            a("hier", href="https://www.natur-im-vww.de/bezugsquellen/"),
-            a( ". Oftmals bieten diese Produzenten jedoch keine 
+            a("hier.", href="https://www.natur-im-vww.de/bezugsquellen/"),
+            a( "Oftmals bieten diese Produzenten jedoch keine 
                 Einzelpflanzen an, sondern fertige Saatgutmischungen, meist für den Einsatz in der 
                 Renaturierung. Da wir diese Shiny App vor allem für Privatgärtner/-innen gemacht haben, 
                 haben wir diese Firmen nicht als Produzenten für Einzelpflanzen in unserer Datenbank. 
@@ -339,19 +321,24 @@ ui <- dashboardPage(
         
         fluidRow(
           box(
-          title = "Bezugsquellen von Conservation Gardening Pflanzen",
-          width = 12,
-          solidHeader = T,
-          status = "warning",
-          closable = F,
-          collapsible = F,
-          DT::dataTableOutput("table_produzent")
-        )
+            title = "Bezugsquellen von Conservation Gardening Pflanzen",
+            width = 12,
+            solidHeader = T,
+            status = "warning",
+            closable = F,
+            collapsible = F,
+            DT::dataTableOutput("table_produzent")
+          )
         )
         
       ),
       
       
+      
+      
+      
+      
+      # knowledge gaps ----------------------------------------------------------
       tabItem(
         tabName = "wissen",
         
@@ -389,7 +376,6 @@ ui <- dashboardPage(
       )
       
       
-      
     )
   )
 )
@@ -400,21 +386,45 @@ ui <- dashboardPage(
 
 
 
+
+
+
+
+# back end ----------------------------------------------------------------
 server <- function(input, output, session) {
   
   
-  # title page --------------------------------------------------------------
   
+  # title page --------------------------------------------------------------
   observeEvent(input$switch_tab, {
     updateTabItems(session, "sidebarmenu", selected = "pflanzenlisten")
   })
   
-
+  
+  
+  
+  
   
   # red list map ------------------------------------------------------------
-  
-  
   output$map <- renderLeaflet({
+    
+    threat_summary <- read_excel("./data-shiny/red_lists_summary.xlsx")
+    germany <- st_read("./data-shiny/germany.shp")
+    
+    germany <- full_join(germany, threat_summary, by = c("name" = "Bundesland"))
+    germany$label <- paste(germany$name, 
+                           "<br><i>Bewertete Taxa:</i>", germany$`Bewertete etablierte Taxa`,
+                           "<br><i>Anzahl gefährdet (0-3, G, R):</i>", germany$Gefährdet,
+                           "<br><i>Prozent gefährdet:</i>", label_percent()(round(germany$Prozentual,2)),
+                           "<br><i>0 - Ausgestorben oder verschollen: </i>", germany$`0`,
+                           "<br><i>1 - Vom Aussterben bedroht: </i>", germany$`1`,
+                           "<br><i>2 - Stark gefährdet: </i>", germany$`2`,
+                           "<br><i>3 - Gefährdet: </i>", germany$`3`,
+                           "<br><i>G - Gefährdung unbekannten Ausmaßes: </i>", germany$G,
+                           "<br><i>R - Extrem selten: </i>", germany$R,
+                           "<br><i>V - Vorwarnliste: </i>", germany$V,
+                           "<br><i>Publikationsjahr von Rote Liste: </i>", germany$Publikationsjahr)
+    
     
     pal <- colorNumeric(palette = "YlOrRd", domain = germany$Gefährdet)
     map <- leaflet(germany) %>% addTiles()
@@ -437,9 +447,11 @@ server <- function(input, output, session) {
   
   
   
+  
+  
   # data explorer -----------------------------------------------------------
   
-  d <- read_csv("./Data-shiny/shiny_data.csv")
+  d <- read_csv("./data-shiny/shiny_data.csv")
   
   # Reactive value for selected dataset ----
   datasetInput <- reactive({
@@ -463,11 +475,11 @@ server <- function(input, output, session) {
     )
   })
   
-
+  
   # Filter data based on selections
   output$table <- DT::renderDataTable(DT::datatable({
     data <- datasetInput()
-
+    
     if (input$rlkat != "Alle") {
       data <- data %>% filter(Gefährdung %like% input$rlkat)
     }
@@ -536,10 +548,15 @@ server <- function(input, output, session) {
                    "}")) 
   ))
   
-# download cg species for each federal state  
+  
+  
+  
+  
+  
+  # download cg species for each federal state  
   output$downloadData <- downloadHandler(
     filename = function() {
-      paste("PflanzenCG_", input$dataset, Sys.Date(), ".csv", sep = "")
+      paste("pflanzencg_", input$dataset, Sys.Date(), ".csv", sep = "")
     },
     content = function(file) {
       write_excel_csv2(datasetInput(), file)
@@ -548,12 +565,15 @@ server <- function(input, output, session) {
   
   
   
-# download species that are not amenable to cg  
-  d_non_cg <- read_csv("./Data-shiny/shiny_data_noncg.csv")
+  
+  
+  
+  # download species that are not amenable to cg  
+  d_non_cg <- read_csv("./data-shiny/shiny_data_noncg.csv")
   
   output$downloadData_noncg <- downloadHandler(
     filename = function() {
-      paste("Planzen_nichtCG-", Sys.Date(), ".csv", sep="")
+      paste("planzen_nichtcg-", Sys.Date(), ".csv", sep="")
     },
     content = function(file) {
       write_excel_csv2(d_non_cg, file)
@@ -562,25 +582,32 @@ server <- function(input, output, session) {
   
   
   
+  
+  
+  
   # download species that are not amenable to cg  
-  d_not_produced <- read_csv("./Data-shiny/not-produced.csv")
+  d_not_produced <- read_csv("./data-shiny/not-produced.csv")
   
   output$downloadData_notproduced <- downloadHandler(
     filename = function() {
-      paste("CGPlanzen_nichtproduziert-", Sys.Date(), ".csv", sep="")
+      paste("cgplanzen_nichtproduziert-", Sys.Date(), ".csv", sep="")
     },
     content = function(file) {
       write_excel_csv2(d_not_produced, file)
     }
   )
-
   
-# download the master file that combines all red lists from the 16 fed states  
-  d_rl <- read_csv("./Data-shiny/shiny_data_rl.csv")
+  
+  
+  
+  
+  
+  # download the master file that combines all red lists from the 16 fed states  
+  d_rl <- read_csv("./data-shiny/shiny_data_rl.csv")
   
   output$downloadData_rl <- downloadHandler(
     filename = function() {
-      paste("RoteListen_16Bundesländer", Sys.Date(), ".csv", sep="")
+      paste("rotelisten_16bundesländer", Sys.Date(), ".csv", sep="")
     },
     content = function(file) {
       write_excel_csv2(d_rl, file)
@@ -589,41 +616,40 @@ server <- function(input, output, session) {
   
   
   
-
-# the produce data frame --------------------------------------------------
-
-
-  d_producer <- read_csv("./Data-shiny/seller_cg.csv")
+  
+  
+  
+  # the producer data frame --------------------------------------------------
+  d_producer <- read_csv("./data-shiny/seller_cg.csv")
   
   output$table_produzent <- renderDataTable(
     DT::datatable({
       data <- d_producer %>% 
         mutate(URL = ifelse(is.na(URL)==T, "nicht verfügbar",
-                 paste0("<a href='", URL,"' target='_blank'>", URL,"</a>"))
+                            paste0("<a href='", URL,"' target='_blank'>", URL,"</a>"))
         ) %>% 
         mutate(Produzent = ifelse(is.na(Produzent)==T, "nicht verfügbar",
-                            Produzent)
+                                  Produzent)
         )
       data
     },
-  escape = FALSE,
-  rownames = FALSE, 
-  options = list(bFilter=TRUE, bSort = "Name",
-                 scroller = TRUE,
-                 scrollX = TRUE,
-                 autoWidth = TRUE,
-                 dom = "ftp",
-                 "sDom" = "rt",
-                 pageLength = 12,
-                 initComplete = JS(
-                   "function(settings, json) {",
-                   "$(this.api().table().header()).css({'background-color': 'white'});",
-                   "}"))
-  )
-  )
-
-    
-
+    escape = FALSE,
+    rownames = FALSE, 
+    options = list(bFilter=TRUE, bSort = "Name",
+                   scroller = TRUE,
+                   scrollX = TRUE,
+                   autoWidth = TRUE,
+                   dom = "ftp",
+                   "sDom" = "rt",
+                   pageLength = 12,
+                   initComplete = JS(
+                     "function(settings, json) {",
+                     "$(this.api().table().header()).css({'background-color': 'white'});",
+                     "}"))
+    )
+  )  
+  
+  
   
 }
 
