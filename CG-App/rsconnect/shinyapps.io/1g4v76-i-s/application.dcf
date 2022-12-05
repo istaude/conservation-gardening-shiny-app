@@ -1,0 +1,13 @@
+name: application
+title: application
+username:
+account: 1g4v76-i-s
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 7819381
+bundleId: 6595058
+url: https://conservation-gardening.shinyapps.io/application/
+when: 1670264819.63956
+lastSyncTime: 1670264819.63956
+asMultiple: FALSE
+asStatic: FALSE

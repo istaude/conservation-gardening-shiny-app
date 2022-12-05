@@ -5,9 +5,9 @@ account: 1g4v76-i-s
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 7819148
-bundleId: 6594932
-url: https://1g4v76-i-s.shinyapps.io/cg-app/
-when: 1670263544.58657
-lastSyncTime: 1670263544.58657
+bundleId: 6595035
+url: https://istaude.shinyapps.io/cg-app/
+when: 1670264596.4694
+lastSyncTime: 1670264596.4694
 asMultiple: FALSE
 asStatic: FALSE
