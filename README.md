@@ -36,5 +36,5 @@ for the application.
 ## Contact
 
 Please contact us at <ingmar.staude@uni-leipzig.de> if you have further
-questions, or information on which plants we have not listed yet amongst
+questions, or information on plants we have not listed yet among
 conservation gardening species.

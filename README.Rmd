@@ -37,6 +37,6 @@ figures in XXXX. In addition, it contains the [source code](https://github.com/i
 5. **app** is the front and backend for the Shiny application.
 
 ## Contact
-Please contact us at ingmar.staude@uni-leipzig.de if you have further questions, or information on which plants we have not listed yet amongst conservation gardening species.
+Please contact us at ingmar.staude@uni-leipzig.de if you have further questions, or information on plants we have not listed yet among conservation gardening species.
 
 
