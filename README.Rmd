@@ -1,0 +1,21 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  eval = FALSE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+library(knitr)
+```
+
+# exampleRPackage
+
+exampleRPackage shows how R packages can be used to store and communicate scientific research products and metadata. Browse its [source code](https://github.com/mvuorre/exampleRPackage), or read this document for a tutorial on creating R packages.
+
