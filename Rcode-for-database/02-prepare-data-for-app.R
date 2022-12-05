@@ -73,7 +73,7 @@ d <- d %>%
 d <- d %>% mutate(Wasser = ifelse(str_detect(Wasser, "Warning:") == TRUE, NA, Wasser))
 d <- d %>% rename(Dachbegrünung = `Dachbegrünung geeignet`, Balkon = `Kübel/Balkon geeignet`)
 
-View(d)
+d <- d %>% group_by(Bundesland) %>% arrange(`Wissenschaftlicher Name`)
 write_csv(d, "Data-shiny/shiny_data.csv")
 
 
