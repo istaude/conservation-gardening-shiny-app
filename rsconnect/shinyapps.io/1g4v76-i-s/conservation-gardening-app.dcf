@@ -1,0 +1,14 @@
+name: conservation-gardening-app
+title: conservation-gardening-app
+username:
+account: 1g4v76-i-s
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 7816697
+bundleId: 6593850
+url: https://1g4v76-i-s.shinyapps.io/conservation-gardening-app/
+when: 1670251219.67782
+lastSyncTime: 1670251219.67782
+asMultiple: FALSE
+asStatic: FALSE
+ignoredFiles: .RData|README.md|README.Rmd|Data-inputs|Data-outputs|Figures|Rcode-for-analysis-plotting|Rcode-for-database

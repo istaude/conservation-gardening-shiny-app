@@ -1,31 +1,21 @@
 library(shiny)
-library(data.table)
+library(rsconnect)
 library(DT)
 library(tidyverse)
-library(leaflet)
 library(sf)
+library(leaflet)
 library(rnaturalearth)
-library(plotly)
-library(readr)
-library(shinyBS)
 library(readxl)
-library(cartogram)
 library(shinyWidgets)
-library(bslib)
 library(bs4Dash)
 library(shinyjs)
-library(fresh)
-library(shinyBS)
-library(golem)
-library(brighter)
 library(scales)
 
 
-
-d <- read_csv("Data-shiny/shiny_data.csv")
+d <- read_csv("./Data-shiny/shiny_data.csv")
 
 germany <- ne_states(country = "Germany", returnclass = "sf")
-threat_summary <- read_excel("Data-shiny/red_lists_summary.xlsx")
+threat_summary <- read_excel("./Data-shiny/red_lists_summary.xlsx")
 germany <- full_join(germany, threat_summary, by = c("name" = "Bundesland"))
 germany$label <- paste(germany$name, 
                        "<br><i>Bewertete Taxa:</i>", germany$`Bewertete etablierte Taxa`,
@@ -48,7 +38,7 @@ ui <- dashboardPage(
   dark = NULL, 
   footer = dashboardFooter(
     left = a(
-      href = "https://github.com",
+      href = "https://github.com/istaude/conservation-gardening-shiny-app",
       target = "_blank",
       "App Github Repository"
     )
@@ -449,7 +439,7 @@ server <- function(input, output, session) {
   
   # data explorer -----------------------------------------------------------
   
-  d <- read_csv("Data-shiny/shiny_data.csv")
+  d <- read_csv("./Data-shiny/shiny_data.csv")
   
   # Reactive value for selected dataset ----
   datasetInput <- reactive({
@@ -559,7 +549,7 @@ server <- function(input, output, session) {
   
   
 # download species that are not amenable to cg  
-  d_non_cg <- read_csv("Data-shiny/shiny_data_noncg.csv")
+  d_non_cg <- read_csv("./Data-shiny/shiny_data_noncg.csv")
   
   output$downloadData_noncg <- downloadHandler(
     filename = function() {
@@ -573,7 +563,7 @@ server <- function(input, output, session) {
   
   
   # download species that are not amenable to cg  
-  d_not_produced <- read_csv("Data-shiny/not-produced.csv")
+  d_not_produced <- read_csv("./Data-shiny/not-produced.csv")
   
   output$downloadData_notproduced <- downloadHandler(
     filename = function() {
@@ -586,7 +576,7 @@ server <- function(input, output, session) {
 
   
 # download the master file that combines all red lists from the 16 fed states  
-  d_rl <- read_csv("Data-shiny/shiny_data_rl.csv")
+  d_rl <- read_csv("./Data-shiny/shiny_data_rl.csv")
   
   output$downloadData_rl <- downloadHandler(
     filename = function() {
@@ -603,7 +593,7 @@ server <- function(input, output, session) {
 # the produce data frame --------------------------------------------------
 
 
-  d_producer <- read_csv("Data-shiny/seller_cg.csv")
+  d_producer <- read_csv("./Data-shiny/seller_cg.csv")
   
   output$table_produzent <- renderDataTable(
     DT::datatable({
