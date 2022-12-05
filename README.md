@@ -5,7 +5,8 @@
 
 This Shiny app shows declining native plant species that are amenable to
 gardening, how to grow them, and where to buy them for each German
-federal state.
+federal state. The application can be accessed here:
+<https://conservation-gardening.shinyapps.io/application/>
 
 The repository contains all the R code and data to reproduce the
 analyses and figures in XXXX. In addition, it contains the [source
