@@ -638,7 +638,7 @@ server <- function(input, output, session) {
     options = list(bFilter=TRUE, bSort = "Name",
                    scroller = TRUE,
                    scrollX = TRUE,
-                   autoWidth = TRUE,
+                   autoWidth = F,
                    dom = "ftp",
                    "sDom" = "rt",
                    pageLength = 12,

@@ -72,7 +72,7 @@ write_excel_csv(dx, "Data-inputs/cultivated_plants_naturadb.csv")
 
 # comparison --------------------------------------------------------------
 dx <- read_csv("Data-inputs/cultivated_plants_naturadb.csv")
-d <- read_csv("Data-shiny/shiny_data.csv")
+d <- read_csv("Cg-app-de/data-shiny/shiny_data.csv")
 
 # Water
 d_water <- bind_rows(

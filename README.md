@@ -5,8 +5,9 @@
 
 This Shiny app shows declining native plant species that are amenable to
 gardening, how to grow them, and where to buy them for each German
-federal state. The application can be accessed here:
-<https://conservation-gardening.shinyapps.io/application/>
+federal state. The application can be accessed here in German:
+<https://conservation-gardening.shinyapps.io/app-de/>; and here in
+English: <https://conservation-gardening.shinyapps.io/app-en/>
 
 The repository contains all the R code and data to reproduce the
 analyses and figures in XXXX. In addition, it contains the [source
@@ -31,7 +32,11 @@ for the application.
 5.  `R-code-for-analysis` contains all the scripts to reproduce the
     figures in our study.
 
-6.  `Cg-app` is the front and backend for the Shiny application.
+6.  `Cg-app-de` contains the data, frontend and backend for the Shiny
+    application in German.
+
+7.  `Cg-app-en` contains the data, frontend and backend for the Shiny
+    application in English.
 
 ## Contact
 

@@ -3,7 +3,7 @@ showtext_auto()
 
 
 # info on threat in germany for text in ms --------------------------------
-threat_summary <- read_excel("Data-shiny/red_lists_summary.xlsx")
+threat_summary <- read_excel("Cg-app-de/data-shiny/red_lists_summary.xlsx")
 new_threat_summary <- threat_summary %>%
   rowwise() %>%
   mutate(threatened = sum(c_across(c(4:10)), na.rm = T)) %>%
@@ -71,7 +71,6 @@ dstate <- dstate %>% select(fed_state, current_threat, threat_with_cg) %>%
 germany <- ne_states(country = "Germany", returnclass = "sf")
 germany <- full_join(germany, dstate, by = c("name" = "fed_state"))
 
-
 (ggplot() +
     geom_sf(data = germany, aes(fill = perc_threat), size =0.1) +
     facet_wrap(~cg_amenable) +
@@ -89,7 +88,6 @@ germany <- full_join(germany, dstate, by = c("name" = "fed_state"))
           axis.text.y = element_blank(),
           panel.grid.major = element_blank(),
           legend.key.size = unit(.5, 'cm'))  -> p1)
-
 
 
 # overall reduction in Germany --------------------------------------------

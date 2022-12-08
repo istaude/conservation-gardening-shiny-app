@@ -1,7 +1,7 @@
 source("Rcode-for-database/00-preamble.R")
 showtext_auto()
 
-d <- read_csv("Data-shiny/shiny_data.csv")
+d <- read_csv("Cg-app-de/data-shiny/shiny_data.csv")
 
 # only threatened species suitable for balconies
 d <- d %>% 
@@ -10,7 +10,7 @@ d <- d %>%
 
 
 # join with info on seller
-ds <- read_csv("Data-shiny/seller_cg.csv") %>% select(- `Deutscher Name`) %>% 
+ds <- read_csv("Cg-app-de/data-shiny/seller_cg.csv") %>% select(- `Deutscher Name`) %>% 
   filter(Produzent == "Kräuter- und Wildpflanzen-Gärtnerei Strickler")
 
 
@@ -119,7 +119,6 @@ ggsave("Figures/figure5.png",
        width = 9.2, 
        dpi = 600,
        bg = "white")
-
 showtext_opts(dpi=96)
 
 

@@ -15,4 +15,5 @@ library(patchwork)
 library(showtext)
 library(ggchicklet)
 library(ggsflabel)
-font_add_google("Roboto Condensed")
+library(ggpubr)
+font_add_google("Roboto Condensed") #just run once

@@ -4,7 +4,7 @@ showtext_auto()
 # figure of cg species available online -----------------------------------
 
 # load cg species and seller information
-d_producer <-  read_csv("Data-shiny/seller_cg.csv")
+d_producer <-  read_csv("Cg-app-de/data-shiny/seller_cg.csv")
 
 # donut chart for overall percentage available
 data <- d_producer %>% 
@@ -67,7 +67,7 @@ labs <- paste0(data$avail,"\n n = " , data$n )
 
 
 # availability by red list category
-d_producer <-  read_csv("Data-shiny/seller_cg.csv")
+d_producer <-  read_csv("Cg-app-de/data-shiny/seller_cg.csv")
 d_amenable <- read_csv("Data-outputs/naturadb/naturadb_redlist_fed_states_all_species.csv")
 
 (rlcat_seller <- left_join(

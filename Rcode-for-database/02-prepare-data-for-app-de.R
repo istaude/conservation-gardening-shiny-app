@@ -1,11 +1,9 @@
 source("Rcode-for-database/00-preamble.R")
 
+# this script prepares all data inputs for the german language version
+# of the shiny app
 
-# Prepare threat summary data ---------------------------------------------
-
-threat_summary <- read_excel("Data-shiny/red_lists_summary.xlsx")
-
-# Prepare data for shiny app ----------------------------------------------
+# prepare data for shiny app ----------------------------------------------
 
 # load plant lists for each federal state ---------------------------------
 d <- read_csv("Data-outputs/naturadb/naturadb_redlist_fed_states_only_cg_wide.csv")
@@ -48,7 +46,6 @@ d <- d %>% select(Bundesland,
 
 
 # höhe, simplify ----------------------------------------------------------
-
 d <- d %>% 
   separate(Höhe, sep = " - ", c("min", "max")) %>% 
   separate(max, sep = " ", c("max", "unit")) %>% 
@@ -74,13 +71,11 @@ d <- d %>% mutate(Wasser = ifelse(str_detect(Wasser, "Warning:") == TRUE, NA, Wa
 d <- d %>% rename(Dachbegrünung = `Dachbegrünung geeignet`, Balkon = `Kübel/Balkon geeignet`)
 
 d <- d %>% group_by(Bundesland) %>% arrange(`Wissenschaftlicher Name`)
-write_csv(d, "Data-shiny/shiny_data.csv")
+write_csv(d, "Cg-app-de/data-shiny/shiny_data.csv")
 
 
 
-
-# Prepare data for species not amenable to CG -----------------------------
-
+# prepare data for species not amenable to CG -----------------------------
 d_non_cg <- read_csv("Data-outputs/naturadb/naturadb_redlist_fed_states_not_cg.csv")
 d_non_cg <- d_non_cg %>% 
   select(Bundesland = fed_state, 
@@ -88,12 +83,11 @@ d_non_cg <- d_non_cg %>%
          Gefährdung = rl_cat, 
          NaturaDB = naturadb_common_name)
 
-write_csv(d_non_cg, "Data-shiny/shiny_data_noncg.csv")
+write_csv(d_non_cg, "CG-app-de/data-shiny/shiny_data_noncg.csv")
 
 
 
-# Prepare Master red list -------------------------------------------------
-
+# prepare master red list -------------------------------------------------
 d_rl <- read_csv("Data-inputs/RLSynthesis_masterlist_OCT2022.csv")
 
 d_rl <- d_rl %>% 
@@ -101,25 +95,20 @@ d_rl <- d_rl %>%
          `Wissenschaftlicher Name` = species_cleaned, 
          Gefährdung = rl_cat)
 
-View(d_rl)
-write_csv(d_rl, "Data-shiny/shiny_data_rl.csv")
+write_csv(d_rl, "CG-app-de/data-shiny/shiny_data_rl.csv")
 
 
 
-
-
-# Prepare Seller list --------------------------------------------------
-
+# prepare seller list --------------------------------------------------
 # load cg species
-cg <- read_csv("Data-shiny/shiny_data.csv")
+cg <- read_csv("Cg-app-de/data-shiny/shiny_data.csv")
 
 # these are all cg species spread across germany
 cg <- cg %>% select(`Wissenschaftlicher Name`, `Deutscher Name`) %>% distinct
 
 
 
-# Strickler ---------------------------------------------------------------
-
+# strickler ---------------------------------------------------------------
 # load strickler
 strickler_species <- read_csv("Data-outputs/strickler/strickler_species.csv")
 
@@ -146,12 +135,10 @@ strickler <- left_join(cg, strickler_species, by = c("Wissenschaftlicher Name" =
   mutate(Produzent = "Kräuter- und Wildpflanzen-Gärtnerei Strickler") %>% 
   select(`Wissenschaftlicher Name`, `Deutscher Name`, Produzent, URL)
 
-write_excel_csv(strickler, "Data-shiny/strickler_cg.csv")
+write_excel_csv(strickler, "Cg-app-de/data-shiny/strickler_cg.csv")
 
 
-
-# Hof Berg Garten Lists ----------------------------
-
+# hof berg garten Lists ----------------------------
 berg_garten_species <- read_csv("Data-outputs/hof-berg-garten/berg_garten_species.csv")
 
 # remove duplicates
@@ -170,14 +157,10 @@ berg_garten <- left_join(cg, berg_garten_species, by = c("Wissenschaftlicher Nam
   mutate(Produzent = "Hof Berg-Garten") %>% 
   select(`Wissenschaftlicher Name`, `Deutscher Name`, Produzent, URL)
 
-write_excel_csv(berg_garten, "Data-shiny/berggarten_cg.csv" )
+write_excel_csv(berg_garten, "Cg-app-de/data-shiny/berggarten_cg.csv" )
 
 
-
-
-# Prepare Spatz und Frank List ----------------------------
-
-
+# prepare spatz und frank list ----------------------------
 spatz_frank_species <- read_csv("Data-outputs/spatzfrank/spatzfrank_species.csv")
 
 # change wrong entry
@@ -199,13 +182,10 @@ spatz_frank <- left_join(cg, spatz_frank_species, by = c("Wissenschaftlicher Nam
   mutate(Produzent = "Staudengärtnerei StaudenSpatz") %>% 
   select(`Wissenschaftlicher Name`, `Deutscher Name`, Produzent, URL)
 
-write_excel_csv(spatz_frank, "Data-shiny/spatzfrank_cg.csv" )
+write_excel_csv(spatz_frank, "Cg-app-de/data-shiny/spatzfrank_cg.csv" )
 
 
-
-
-# Prepare Blauetikett List ----------------------------
-
+# prepare blauetikett list ----------------------------
 # load list
 blauetikett_species <- read_csv("Data-outputs/blauetikett/blauetikett_species.csv")
 
@@ -237,13 +217,11 @@ blauetikett <- left_join(cg, blauetikett_species4, by = c("Wissenschaftlicher Na
   mutate(Produzent = "Blauetikett Bornträger") %>% 
   select(`Wissenschaftlicher Name`, `Deutscher Name`, Produzent, URL)
 
-write_excel_csv(blauetikett, "Data-shiny/blauetikett_cg.csv" )
+write_excel_csv(blauetikett, "Cg-app-de/data-shiny/blauetikett_cg.csv" )
 
 
 
-
-# Prepare Rieger-Hofmann Masterlist ----------------------------
-
+# prepare rieger-hofmann masterlist ----------------------------
 # load list
 rieger_hof_species <-  read_csv("Data-outputs/rieger-hof/rieger_hof_species.csv")
 
@@ -262,18 +240,16 @@ rieger_hof <- left_join(cg, rieger_hof_species, by = c("Wissenschaftlicher Name"
   mutate(Produzent = "Rieger-Hofmann") %>% 
   select(`Wissenschaftlicher Name`, `Deutscher Name`, Produzent, URL)
 
-write_excel_csv(rieger_hof, "Data-shiny/riegerhof_cg.csv" )
-
-
+write_excel_csv(rieger_hof, "Cg-app-de/data-shiny/riegerhof_cg.csv" )
 
 
 
 # prepare master list of sellers ------------------------------------------
-riegerhof <- read_csv("Data-shiny/riegerhof_cg.csv" )
-blauetikett <- read_csv("Data-shiny/blauetikett_cg.csv" )
-seller <- spatzfrank <- read_csv("Data-shiny/spatzfrank_cg.csv" )
-strickler <- read_csv("Data-shiny/strickler_cg.csv" )
-berggarten <- read_csv("Data-shiny/berggarten_cg.csv" )
+riegerhof <- read_csv("Cg-app-de/data-shiny/riegerhof_cg.csv" )
+blauetikett <- read_csv("Cg-app-de/data-shiny/blauetikett_cg.csv" )
+seller <- spatzfrank <- read_csv("Cg-app-de/data-shiny/spatzfrank_cg.csv" )
+strickler <- read_csv("Cg-app-de/data-shiny/strickler_cg.csv" )
+berggarten <- read_csv("Cg-app-de/data-shiny/berggarten_cg.csv" )
 giessmayer <-  read_csv("Data-outputs/giessmayer/giessmayer_species.csv") %>% 
   right_join(cg, by = c("species" = "Wissenschaftlicher Name")) %>% 
   mutate(Produzent = "Staudengärtnerei Gaißmayer") %>% 
@@ -292,12 +268,12 @@ seller <- seller %>% filter(!is.na(URL))
 
 # join back to cg
 seller <- left_join(cg, seller %>% select(-`Deutscher Name` ))
-View(seller)
-write_excel_csv(seller, "Data-shiny/seller_cg.csv" )
+
+write_excel_csv(seller, "Cg-app-de/data-shiny/seller_cg.csv" )
 
 
 # prepare data frame of plants amenable but not produced ------------------
-seller <- fread("Data-shiny/seller_cg.csv")
+seller <- fread("Cg-app-de/data-shiny/seller_cg.csv")
 
 not_produced <- seller %>% mutate(avail = ifelse(is.na(Produzent), "not available", "available")) %>% 
   select(species = `Wissenschaftlicher Name`, avail) %>% 
@@ -305,8 +281,4 @@ not_produced <- seller %>% mutate(avail = ifelse(is.na(Produzent), "not availabl
   filter(avail == "not available")
 
 
-write_excel_csv(not_produced, "Data-shiny/not-produced.csv" )
-
-
-
-
+write_excel_csv(not_produced, "Cg-app-de/data-shiny/not-produced.csv" )
