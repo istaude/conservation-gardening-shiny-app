@@ -16,15 +16,13 @@ d <- d %>% filter(!grepl("var.",species_cleaned))
 # how many species in total threatened in at least one federal state?
 d %>% select(species_cleaned) %>% distinct %>% nrow
 
-
 # create column that indicates whether cg or not
 d <- d %>% mutate(cg_amenable = ifelse(naturadb_common_name == "not in naturadb", "not_cg", "cg")) %>% 
   select(-naturadb_common_name, -rl_cat) %>% distinct
 
-# how many of the 3142 species are amenable to gardening in total
-d %>% select(species_cleaned, cg_amenable) %>% distinct %>% 
-  count(cg_amenable)
-
+# how many red lsited in each state
+d %>% select(fed_state, species_cleaned, cg_amenable) %>% distinct %>% 
+  group_by(fed_state) %>% summarise( n())
 
 # now we can calculate the proportion of species amenable to cg per state, and overall
 # per state
@@ -68,6 +66,10 @@ percentage <- dstate %>% filter(cg_amenable == "cg") %>%
     full_join(dstate %>% filter(cg_amenable == "total") %>% select(fed_state, n_total = n) ) %>% 
     mutate(perc = n/n_total) %>% 
     mutate(fed_state = fct_rev(fed_state))
+
+# median percentage, min max
+median(percentage$perc)
+range(percentage$perc)
 
 (text <- ggplot(NULL, aes(x = 1, y = 1)) + 
   ylim(0.8, 1.2) +
