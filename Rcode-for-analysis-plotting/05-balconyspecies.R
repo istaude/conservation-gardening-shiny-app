@@ -71,6 +71,9 @@ d_select_from <- d %>%
 write_excel_csv(d_select_from, "Data-outputs/balcony/balcony_cg_possibilities.csv")
 
 
+# read again
+d_select_from <- read_csv("Data-outputs/balcony/balcony_cg_possibilities.csv")
+View(d_select_from)
 d_select <- d_select_from %>% group_by(Bundesland) %>% sample_n(5)
 
 ds <- d_select %>%
@@ -151,4 +154,125 @@ ds <- d_select %>%
                                     '*bold(',rl_cat,')', "; ", price, "€", "\n",
                                     '', sep ="", collapse = ""), '"') 
   )
+
+
+
+# practitioner selection --------------------------------------------------
+
+# in the end, practitioners selected suitable species from the app
+# find for these species the price of purchase
+d <- read_excel("Data-outputs/balcony/selection-balcony-plants.xlsx", 
+                sheet = "selection") %>% rename(`Wissenschaftlicher Name` = species)
+
+# join with info on seller
+ds <- read_csv("Cg-app-de/data-shiny/seller_cg.csv") %>% select(- `Deutscher Name`) %>% 
+  filter(Produzent == "Kräuter- und Wildpflanzen-Gärtnerei Strickler")
+
+
+# now the challenge is to get their price,
+# first filter plants not produced
+ds <- left_join(d, ds)
+ds_na <- ds %>% filter(is.na(Produzent))
+ds <- ds %>% na.omit
+
+# now only the species and url
+urls <- ds %>% select(`Wissenschaftlicher Name`, URL) %>% distinct %>% pull(URL)
+
+# for these species extract the price
+datalist <- NULL
+for (i in 1:length(urls)){
+  page <- read_html(urls[i])
+  data <- page %>%
+    rvest::html_nodes('table') %>% 
+    xml2::xml_find_all("//tr//td") %>% 
+    rvest::html_text() %>% 
+    str_replace_all(., "[\t\n]" , "")
+  
+  datalist[[i]] <- data.frame(price  = data[str_which(data, pattern = "Preis") +1], 
+                              size = data[str_which(data, pattern = "Verkaufsgröße:") +1])
+  print(i)
+}
+
+dt <- cbind(ds %>% select(`Wissenschaftlicher Name`, URL) %>% distinct, 
+            bind_rows(datalist)) 
+
+price1 <- regmatches(dt$price, regexpr("[:^]*:[^**]*", dt$price))
+price1 <-  sub(": ", "", price1)
+price1 <-  sub(",", ".", price1)
+price1 <-  sub("€", "", price1)
+price1 <- trimws(price1)
+price1 <- as.numeric(price1)
+
+dt$price1 <- price1
+
+# join back to federal state data
+d <- left_join(d, dt) %>% arrange(Bundesland)
+
+d <- d %>% 
+  group_by(Bundesland, `Wissenschaftlicher Name`) %>% 
+  summarise(rl_cat = first(rl_cat), 
+            price = first(price1))
+
+
+# fill the rest out manually, save file
+write_excel_csv2(d, "Data-outputs/balcony/seletion-balcony-plants-price-pre.csv")
+
+# read filled file
+d <- read_delim("Data-outputs/balcony/seletion-balcony-plants-price.csv", 
+                delim = ";", escape_double = FALSE, 
+                locale = locale(decimal_mark = ","), 
+                trim_ws = TRUE) %>% 
+  rename(species = `Wissenschaftlicher Name`)
+
+
+d <- d %>%
+  group_by(Bundesland) %>% 
+  summarise(spec_vec = 
+              paste(species, " ",
+                    "(", rl_cat, ")", "; ", price, "€", "\n",
+                    sep ="", collapse = "") 
+  )
+d$spec_vec <-  gsub('.{1}$', '', d$spec_vec)
+
+# make figure again
+# plot of germany ---------------------------------------------------------
+germany <- ne_states(country = "Germany", returnclass = "sf")
+
+germany <- germany %>% 
+  filter(name != "Bremen") %>% 
+  mutate(name = ifelse(name == "Niedersachsen", "Bremen/Niedersachsen", name)) %>% 
+  left_join(d, by = c("name" = "Bundesland"))
+
+germany$name
+gg_color_hue <- function(n) {
+  hues = seq(15, 375, length = n + 1)
+  hcl(h = hues, l = 65, c = 100)[1:n]
+}
+cols = gg_color_hue(15)
+ggplot(germany) +
+  geom_sf(size =0.1, alpha = 0.3, fill = cols) +
+  geom_sf_label_repel(aes(label = spec_vec), size = 3,
+                      seed = 7, 
+                      fill = alpha(cols, 0.2), max.overlaps = 20, 
+                      force = 1000, hjust = 0, box.padding = 0,
+                      segment.curvature = -1e-20,
+                      segment.linetype = 1,
+                      segment.size = 0.4, 
+                      segment.alpha = 0.6,
+                      family = "Roboto Condensed", fontface = "italic") + 
+  scale_x_continuous(expand = expansion(mult = 0.8)) +
+  scale_y_continuous(expand = expansion(mult = 0.4)) +
+  theme_void() +
+  labs(title = "5 conservation gardening species for the balcony per federal state") +
+  theme(title = element_text(family = "Roboto Condensed"))
+
+showtext_opts(dpi=600)
+ggsave("Figures/figure5_practitioner_version.png", 
+       height = 8, 
+       width = 8.7, 
+       dpi = 600,
+       bg = "white")
+showtext_opts(dpi=96)
+
+
 

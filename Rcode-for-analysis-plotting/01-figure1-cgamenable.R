@@ -67,6 +67,10 @@ percentage <- dstate %>% filter(cg_amenable == "cg") %>%
     mutate(perc = n/n_total) %>% 
     mutate(fed_state = fct_rev(fed_state))
 
+# number threatemend median
+median(percentage$n_total)
+range(percentage$n_total)
+
 # median percentage, min max
 median(percentage$perc)
 range(percentage$perc)
@@ -162,3 +166,17 @@ ggsave(
   bg = "white"
 )
 showtext_opts(dpi=96)
+
+
+
+
+# non-cg plants against Reinhards list ------------------------------------
+# does adding another source to naturadb, e.g., Reinhard Witts Pflanzenliste in
+# Witt, R. (1994). Wildpflanzen für jeden Garten: 1000 heimische Blumen
+dw <- read_csv("Data-inputs/witt-list-wildpflanzen.csv")
+dncg <- read_csv("Data-outputs/naturadb/naturadb_redlist_fed_states_not_cg.csv")
+
+inner_join(
+  dw %>% select(species_cleaned = wittList) %>% distinct,
+  dncg %>% select(species_cleaned) %>% distinct
+)
