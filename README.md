@@ -10,7 +10,8 @@ federal state. The application can be accessed here in German:
 English: <https://conservation-gardening.shinyapps.io/app-en/>
 
 The repository contains all the R code and data to reproduce the
-analyses and figures in XXXX. In addition, it contains the [source
+analyses and figures in *“Putting conservation gardening into
+practice”*. In addition, it contains the [source
 code](https://github.com/istaude/conservation-gardening-shiny-app/tree/master/CG-App)
 for the application.
 
