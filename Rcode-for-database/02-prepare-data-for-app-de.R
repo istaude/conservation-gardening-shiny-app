@@ -108,34 +108,40 @@ cg <- cg %>% select(`Wissenschaftlicher Name`, `Deutscher Name`) %>% distinct
 
 
 
+
 # strickler ---------------------------------------------------------------
+# this list is outdated, urls have been retrieved in 2022 and are not working
+# any longer, see textmining_strickler_april2023 for the correct links and up
+# to date web scraping.
+
 # load strickler
-strickler_species <- read_csv("Data-outputs/strickler/strickler_species.csv")
+# strickler_species <- read_csv("Data-outputs/strickler/strickler_species.csv")
 
 # remove everything in paranthesis
-strickler_species$name <- str_replace(strickler_species$name , " \\s*\\([^\\)]+\\)", "")
+# strickler_species$name <- str_replace(strickler_species$name , " \\s*\\([^\\)]+\\)", "")
 # only part before --
-strickler_species$name  <- str_split(strickler_species$name , ' -- ', simplify = TRUE)[,1]
+# strickler_species$name  <- str_split(strickler_species$name , ' -- ', simplify = TRUE)[,1]
 # only first two words
-strickler_species <- strickler_species %>% mutate(name = 
-                                                   ifelse(
-                                                     str_detect(name, " x ") == TRUE,
-                                                     word(name, 1,3), word(name, 1,2)
-                                                   ))
+# strickler_species <- strickler_species %>% mutate(name = 
+#                                                   ifelse(
+#                                                     str_detect(name, " x ") == TRUE,
+#                                                     word(name, 1,3), word(name, 1,2)
+#                                                   ))
+
 # remove * and comma
-strickler_species <- strickler_species %>% 
-  mutate(name = str_remove(name, "\\*" )) %>%  # remove *
-  mutate(name = str_remove(name, "\\," )) %>%  # remove ,
-  mutate(name = trimws(name))  # remove white space
+#strickler_species <- strickler_species %>% 
+#  mutate(name = str_remove(name, "\\*" )) %>%  # remove *
+#  mutate(name = str_remove(name, "\\," )) %>%  # remove ,
+#  mutate(name = trimws(name))  # remove white space
 
 # left join with cg species
-strickler <- left_join(cg, strickler_species, by = c("Wissenschaftlicher Name" = "name"))  %>% 
-  mutate(values = ifelse(is.na(values) == T, NA, paste0("https://www.gaertnerei-strickler.de/", values))) %>% 
-  rename(URL = values) %>% 
-  mutate(Produzent = "Kräuter- und Wildpflanzen-Gärtnerei Strickler") %>% 
-  select(`Wissenschaftlicher Name`, `Deutscher Name`, Produzent, URL)
+#strickler <- left_join(cg, strickler_species, by = c("Wissenschaftlicher Name" = "name"))  %>% 
+#  mutate(values = ifelse(is.na(values) == T, NA, paste0("https://www.gaertnerei-strickler.de/", values))) %>% 
+#  rename(URL = values) %>% 
+#  mutate(Produzent = "Kräuter- und Wildpflanzen-Gärtnerei Strickler") %>% 
+#  select(`Wissenschaftlicher Name`, `Deutscher Name`, Produzent, URL)
 
-write_excel_csv(strickler, "Cg-app-de/data-shiny/strickler_cg.csv")
+# write_excel_csv(strickler, "Cg-app-de/data-shiny/strickler_cg.csv")
 
 
 # hof berg garten Lists ----------------------------
@@ -188,13 +194,12 @@ write_excel_csv(spatz_frank, "Cg-app-de/data-shiny/spatzfrank_cg.csv" )
 # prepare blauetikett list ----------------------------
 # load list
 blauetikett_species <- read_csv("Data-outputs/blauetikett/blauetikett_species.csv")
+blauetikett_species2 <- blauetikett_species[c(1:34),]
+blauetikett_species3 <- blauetikett_species[-c(1:34),]
 
 # change wrong entries
 blauetikett_species$name[blauetikett_species$name=="Knoblauchrauke, Alliaria petiolata  Samen"] <- "Alliaria petiolata, Knoblauchrauke  Samen"
 blauetikett_species2$name[blauetikett_species2$name=="Chamaemelum nobile  Samen"] <- " Chamaemelum nobile  Samen"
-
-blauetikett_species2 <- blauetikett_species[c(1:34),]
-blauetikett_species3 <- blauetikett_species[-c(1:34),]
 
 # only keep characters after comma
 blauetikett_species2$name <-  gsub(".*\\,", "", blauetikett_species2$name)
@@ -270,7 +275,7 @@ seller <- seller %>% filter(!is.na(URL))
 seller <- left_join(cg, seller %>% select(-`Deutscher Name` ))
 
 write_excel_csv(seller, "Cg-app-de/data-shiny/seller_cg.csv" )
-
+View(seller)
 
 # prepare data frame of plants amenable but not produced ------------------
 seller <- fread("Cg-app-de/data-shiny/seller_cg.csv")

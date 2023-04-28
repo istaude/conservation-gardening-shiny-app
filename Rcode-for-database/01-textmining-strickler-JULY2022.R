@@ -1,4 +1,4 @@
-source("Data-Rcode-for-database/00-preamble.R")
+source("Rcode-for-database/00-preamble.R")
 
 # on Gärtnerei Strickler there is a total of 2215 entries seperate over 45 pages/tabs
 # we need to generate urls that include page number and then extract all the available plants on that page
