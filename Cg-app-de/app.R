@@ -21,12 +21,17 @@ ui <- dashboardPage(
   header = dashboardHeader(status = "olive"),
   dark = NULL, 
   footer = dashboardFooter(
-    left = a(
+    right = a(
       href = "https://github.com/istaude/conservation-gardening-shiny-app",
       target = "_blank",
-      "Github Repository"
+      "Github"
+    ),
+    left = a(
+      href = "https://doi.org/10.1038/s41598-023-39432-8",
+      target = "_blank",
+      "Paper"
     )
-  ),
+    ),
   
   sidebar = dashboardSidebar(
     
@@ -82,12 +87,17 @@ ui <- dashboardPage(
         tabName = "home",
         bs4Jumbotron(
           title = "Pflanzenlisten für Conservation Gardening",
-          lead = "Dies ist eine Shiny App, die Conservation Gardening Pflanzenlisten 
+          lead = 
+      "Dies ist eine Shiny App, die Conservation Gardening Pflanzenlisten 
       für jedes Bundesland bereitstellt. Anhand der Roten Listen der einzelnen 
       Bundesländer identifizieren wir rückläufige und gefährdete Arten. Wir 
       integrieren diese Informationen mit Daten aus NaturaDB, einer 
       Gartenpflanzen-Datenbank, um Pflanzen auszuwählen, die für den Garten 
-      geeignet sind und ihre Standortanforderungen aufzulisten.",
+      geeignet sind und ihre Standortanforderungen aufzulisten. Wir vergleichen die resultierenden
+      Artenlisten mit den Sortimenten von mehreren Wildpflanzenproduzenten in Deutschland und
+      stellen Informationen zur kommerziellen Verfügbarkeit dieser Arten bereit. Für mehr Informationen
+      siehe: Munschek, M., Witt, R., Kaltofen, K. et al. Putting conservation gardening into practice. 
+      Sci Rep 13, 12671 (2023).",
           status = "warning",
           btnName = NULL,
           actionButton("switch_tab", 
@@ -120,7 +130,7 @@ ui <- dashboardPage(
             aufgerufen und heruntergeladen werden. Sie können nach Status auf der Roten Liste (Gefährdung),
             Licht-, Wasser-, Nährstoff- und Bodenansprüchen, Höhe und Biodiversität 
             (d. h. ob die Pflanze von Bienen, Schmetterlingen, Vögeln und Säugetieren genutzt wird), 
-            Blütenfarbe, Frosttoleranz und Eignung der Pflanzen für Dach- und Balkonbegrünung sortieren."
+            Blütenfarbe und Eignung der Pflanzen für Dach- und Balkonbegrünung sortieren."
           )
         ),
         
@@ -177,10 +187,6 @@ ui <- dashboardPage(
               
               selectInput(inputId = "boden",  label = "Boden", selectize = F,
                           c("Alle",  "durchlässig", "humus", "lehmig", "normal")
-              ),
-              
-              selectInput(inputId = "frost", label = "Frosttoleranz", selectize = F,
-                          c("Alle", paste("Klimazone", c(1:9)))
               ),
               
               selectInput(inputId = "höhe", label = "Höhe (cm)", selectize = F,
@@ -247,12 +253,13 @@ ui <- dashboardPage(
             width = 12,
             solidHeader = FALSE,
             collapsible = FALSE,
-            "Hier können Sie einen Überblick über den Gefährdungsstand von Gefäßpflanzen in den einzelnen Bundesländer erhalten.
-            Außerdem können Sie eine Masterliste (d.h., die integrierten Roten Listen der 16 Bundesländer) downloaden. Diese
-            Masterliste hat drei Spalten: Bundesland, Artname, Gefährdungsgrad; und beinhaltet nur Arten mit den Gefährdungskategorien:
-            0 (Ausgestorben oder verschollen), 1 (Vom Aussterben bedroht), 2 (Stark gefährdet), 3 (Gefährdet), 
-            G (Gefährdung unbekannten Ausmaßes), R (Extrem selten), V (Vorwarnliste). Die Masterliste bildet die Grundlage für 
-            Conservation Gardening und ist jene, die wir mit Informationen von NaturaDB verschnitten haben.
+            "Hier erhalten Sie einen Überblick über den Gefährdungsstatus von Gefäßpflanzen 
+            in den einzelnen Bundesländern. Zudem haben Sie die Möglichkeit, eine Masterliste
+            herunterzuladen, die aus den integrierten Roten Listen der 16 Bundesländer besteht.
+            Diese Masterliste enthält drei Spalten: Bundesland, Artname und Gefährdungsgrad. 
+            Sie umfasst ausschließlich Arten, die den Gefährdungskategorien 0 (Ausgestorben 
+            oder verschollen), 1 (Vom Aussterben bedroht), 2 (Stark gefährdet), 3 (Gefährdet),
+            G (Gefährdung unbekannten Ausmaßes), R (Extrem selten) und V (Vorwarnliste) angehören.
             ",
             footer = downloadButton("downloadData_rl", "Download Rote Listen der 16 Bundesländer")
           )
@@ -303,16 +310,16 @@ ui <- dashboardPage(
             br(),
             br(),
             
-            a("Wir möchten außerdem betonen, dass es auch für Privatgärten wünschenswert wäre,
-                zertifiziertes Regio-Saatgut zu verwenden. Eine Liste der von der VWW 
-                (Verband deutscher Wildsamen- und Wildpflanzenproduzenten e.V.) zertifizierten
-                Produzenten finden Sie"),
+            a("Wir möchten betonen, dass es auch für Privatgärten wünschenswert wäre,
+                zertifiziertes Regio-Saatgut zu verwenden. Eine Liste der Produzenten, die vom VWW 
+                (Verband deutscher Wildsamen- und Wildpflanzenproduzenten e.V.) zertifiziert
+                sind finden Sie"),
             a("hier.", href="https://www.natur-im-vww.de/bezugsquellen/"),
             a( "Oftmals bieten diese Produzenten jedoch keine 
                 Einzelpflanzen an, sondern fertige Saatgutmischungen, meist für den Einsatz in der 
                 Renaturierung. Da wir diese Shiny App vor allem für Privatgärtner/-innen gemacht haben, 
                 haben wir diese Firmen nicht als Produzenten für Einzelpflanzen in unserer Datenbank. 
-                Dies wird sich ändern, sobald im Rahmen der Renaturierungspolitik vermehrt Regiosaatgut 
+                Dies wird sich ändern, sobald im Rahmen der Renaturierungspolitik vermehrt Regio-Saatgut 
                 produziert und für Kleinkunden zur Verfügung gestellt wird.")
             
           )
@@ -451,7 +458,7 @@ server <- function(input, output, session) {
   
   # data explorer -----------------------------------------------------------
   
-  d <- read_csv("./data-shiny/shiny_data.csv")
+  d <- read_csv("./data-shiny/shiny_data.csv") %>% select(-Frostverträglich)
   
   # Reactive value for selected dataset ----
   datasetInput <- reactive({
@@ -502,10 +509,6 @@ server <- function(input, output, session) {
     
     if (input$boden != "Alle") {
       data <- data %>% filter(Boden %like% input$boden)
-    }
-    
-    if (input$frost != "Alle") {
-      data <- data %>% filter(Frostverträglich %like% input$frost)
     }
     
     if (input$farbe != "Alle") {

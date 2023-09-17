@@ -21,10 +21,15 @@ ui <- dashboardPage(
   header = dashboardHeader(status = "olive"),
   dark = NULL, 
   footer = dashboardFooter(
-    left = a(
+    right = a(
       href = "https://github.com/istaude/conservation-gardening-shiny-app",
       target = "_blank",
-      "Github Repository"
+      "Github"
+    ),
+    left = a(
+      href = "https://doi.org/10.1038/s41598-023-39432-8",
+      target = "_blank",
+      "Paper"
     )
   ),
   
@@ -86,7 +91,11 @@ ui <- dashboardPage(
           lists for each German federal state. Using each state's Red Lists, we identify declining
           and endangered species. We integrate this information with data from 
           NaturaDB, a garden plant database, to find plants that are amenable
-          to gardening and list their site requirements.",
+          to gardening and list their site requirements. We compare the resulting species lists
+          with the assortments of several wild plant producers in Germany and provide information
+          on the commercial availability of these species. For more information, 
+          see: Munschek, M., Witt, R., Kaltofen, K. et al. Putting conservation gardening into 
+          practice. Sci Rep 13, 12671 (2023).",
           status = "warning",
           btnName = NULL,
           actionButton("switch_tab", 
@@ -115,12 +124,12 @@ ui <- dashboardPage(
             width = 12,
             solidHeader = FALSE,
             collapsible = FALSE,
-            "Plant lists for Conservation Gardening can be accessed and downloaded 
-            here for each German federal state. You can sort by red list status 
-            (endangerment), light, water, nutrient and soil requirements, height 
-            and biodiversity (i.e., whether the plant is used by bees, butterflies, 
-            birds and/or mammals), flower color, frost tolerance and suitability 
-            of plants for roof and balcony greening."
+            "You can conveniently access and download plant lists for Conservation Gardening,
+            for each German federal state, right here. There are several sorting options,
+            including Red List status (endangerment), light, water, nutrient, and soil requirements, plant height, 
+            biodiversity (indicating whether the plant attracts bees, 
+            butterflies, birds, and/or mammals), flower color 
+            and suitability for rooftop and balcony greening."
           )
         ),
         
@@ -177,10 +186,6 @@ ui <- dashboardPage(
               
               selectInput(inputId = "boden",  label = "Soil", selectize = F,
                           c("All",  "permeable", "humus", "loamy", "normal")
-              ),
-              
-              selectInput(inputId = "frost", label = "Freezing tolerance", selectize = F,
-                          c("All", paste("Climatic zone", c(1:9)))
               ),
               
               selectInput(inputId = "höhe", label = "Height (cm)", selectize = F,
@@ -247,15 +252,16 @@ ui <- dashboardPage(
             width = 12,
             solidHeader = FALSE,
             collapsible = FALSE,
-            "Here you can get an overview of the endangerment status of vascular 
-            plants in each German federal states. You can also download a master 
-            list (i.e., the synthesized Red Lists of the 16 federal states). 
-            This master list has three columns: State, Species Name, Threat Level; 
-            it includes only species with these threat categories: 0 (Extinct or Lost), 
+            "Here, you can access a comprehensive overview of the conservation status 
+            of vascular plants in each of the German federal states. Additionally, you
+            have the option to download a master list, which comprises the consolidated
+            Red Lists of all 16 federal states. This master list encompasses three 
+            columns: State, Species Name, and Threat Level. It specifically includes species
+            falling under the following threat categories: 0 (Extinct or Lost),
             1 (Critically Endangered), 2 (Endangered), 3 (Vulnerable), 
-            G (Endangered - Unknown Extent), R (Rare), V (Near Threatened).
-            This database is the basis for Conservation Gardening 
-            and was integrated with the data stream from NaturaDB.
+            G (Endangered - Unknown Extent), R (Rare), and V (Near Threatened).
+            This database forms the foundation for Conservation Gardening 
+            and has been integrated with data sourced from NaturaDB.
             ",
             footer = downloadButton("downloadData_rl", "Download Red List synthesis")
           )
@@ -292,26 +298,27 @@ ui <- dashboardPage(
             solidHeader = FALSE,
             collapsible = FALSE,
             closable = FALSE,
-            a("Many Conservation Gardening plants are already available from nurseries
-              that specialize in wildflowers, such as Gärtnerei Strickler, Hof Berg-Garten,
-              Staudengärtnerei Spatz und Frank, Blauetikett Bornträger, and 
-              Staudengärtnerei Geißmeier. Enter the name of your plant in the search
-              form and see if it is produced by the above producers. 
-              Click on the link in the URL column to be redirected directly to the producer.
-              If this does not work, copy the link into an Internet browser, 
-              or search for the plant directly on the producer's site."),
+            a("Numerous Conservation Gardening plants are readily accessible through
+              specialized wildflower nurseries like Gärtnerei Strickler, Hof Berg-Garten,
+              Staudengärtnerei Spatz und Frank, Blauetikett Bornträger, and
+              Staudengärtnerei Geißmeier. To locate your desired plant, simply
+              input its name into the search field and check if any of the aforementioned
+              nurseries carry it. Should you encounter any issues with the provided link
+              in the URL column, you can manually copy and paste it into your internet
+              browser or directly search for the plant on the nursery's website."),
 
             br(),
             br(),
             
-            a("We would also like to emphasize that it would be desirable for private gardens
-              to use certified Regio seeds. A list of producers certified by the VWW 
-              (Verband der deutschen Wildsamen- und Wildpflanzenproduzenten e.V.) can be found"),
+            a("We'd like to emphasize the importance of private gardens opting 
+            for certified Regio seeds. You can access a list of producers who have received 
+            certification from the VWW (Verband der deutschen Wildsamen- und Wildpflanzenproduzenten e.V.)
+            by clicking on the following link"),
             a("here.", href="https://www.natur-im-vww.de/bezugsquellen/"),
-            a( "Often, however, these producers do not offer individual plants but 
-               ready-made seed mixtures, mostly for use in restoration. Since we 
-               have made this Shiny App mainly for private gardeners, we do not have these
-               companies in our database.")
+            a( "However, note that these certified producers often 
+               primarily offer pre-packaged seed mixtures, primarily intended for 
+               restoration purposes. Given that our Shiny App primarily caters to 
+               private gardeners, we haven't included these companies in our database.")
             
           )
         ),
@@ -346,12 +353,12 @@ ui <- dashboardPage(
             solidHeader = T,
             status = "warning",
             collapsible = FALSE,
-            "Here we offer a download for plants that are red-listed but not
-            in NaturaDB. At this time, we are identifying these plants as not amenable
-            to Conservation Gardening based on our current knowledge/data. 
-            In the future, it would be important to find out how (if at all) 
-            these species could be seeded/planted in gardens.",
-            footer = downloadButton("downloadData_noncg", "Download non-cg plants")
+            "We provide a download option for plants that are red-listed but not present
+            in NaturaDB. Currently, we categorize these plants as not suitable for
+            Conservation Gardening based on our existing knowledge and data. However,
+            it's crucial for future endeavors to explore how these species can
+            potentially be introduced and cultivated in gardens.",
+            footer = downloadButton("downloadData_noncg", "Download non-CG plants")
           )
         ),
         
@@ -364,9 +371,9 @@ ui <- dashboardPage(
             solidHeader = T,
             status = "warning",
             collapsible = FALSE,
-            "Finally, we offer a download for plants that are suitable for 
-            Conservation Gardening but are not currently in production 
-            (at least not by the producers in our database).",
+            "Additionally, we provide a download option for plants that are suitable
+            for Conservation Gardening but are presently not in production, at
+            least not by the producers in our database. ",
             footer = downloadButton("downloadData_notproduced", "Download production gaps")
           )
         )
@@ -451,7 +458,7 @@ server <- function(input, output, session) {
   
   # data explorer -----------------------------------------------------------
   
-  d <- read_csv("./data-shiny/shiny_data.csv")
+  d <- read_csv("./data-shiny/shiny_data.csv") %>% select(-`Freezing tolerance`)
   
   # Reactive value for selected dataset ----
   datasetInput <- reactive({
@@ -503,10 +510,6 @@ server <- function(input, output, session) {
     
     if (input$boden != "All") {
       data <- data %>% filter(Soil %like% input$boden)
-    }
-    
-    if (input$frost != "All") {
-      data <- data %>% filter(`Freezing tolerance` %like% input$frost)
     }
     
     if (input$farbe != "All") {
