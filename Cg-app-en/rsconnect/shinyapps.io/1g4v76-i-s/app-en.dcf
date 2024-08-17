@@ -5,7 +5,7 @@ account: 1g4v76-i-s
 server: shinyapps.io
 hostUrl: https://api.shinyapps.io/v1
 appId: 7847425
-bundleId: 7693364
+bundleId: 8994387
 url: https://conservation-gardening.shinyapps.io/app-en/
 version: 1
 asMultiple: FALSE

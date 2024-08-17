@@ -252,7 +252,7 @@ write_excel_csv(rieger_hof, "Cg-app-de/data-shiny/riegerhof_cg.csv" )
 # prepare master list of sellers ------------------------------------------
 riegerhof <- read_csv("Cg-app-de/data-shiny/riegerhof_cg.csv" )
 blauetikett <- read_csv("Cg-app-de/data-shiny/blauetikett_cg.csv" )
-seller <- spatzfrank <- read_csv("Cg-app-de/data-shiny/spatzfrank_cg.csv" )
+spatzfrank <- spatzfrank <- read_csv("Cg-app-de/data-shiny/spatzfrank_cg.csv" )
 strickler <- read_csv("Cg-app-de/data-shiny/strickler_cg.csv" )
 berggarten <- read_csv("Cg-app-de/data-shiny/berggarten_cg.csv" )
 giessmayer <-  read_csv("Data-outputs/giessmayer/giessmayer_species.csv") %>% 

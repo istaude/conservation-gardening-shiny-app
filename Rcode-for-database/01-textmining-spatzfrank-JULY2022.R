@@ -33,5 +33,3 @@ for (i in 1:23){
 spatzfrank_species <- bind_rows(spatzfrank_list)
 
 write.csv(spatzfrank_species, "Data-outputs/spatzfrank/spatzfrank_species.csv", row.names = F)
-
-
